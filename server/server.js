@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/:entry', (req, res) => {
-    const entry = req.params. entry
+    const entry = req.params.entry
     Url.findOne({short_url: entry}).then((match) => {
         if(!match) {
             return res.send('No matching shortened URL in database');
@@ -55,7 +55,11 @@ app.get('/new/*', (req, res) => {
                 });
             }
             else {
-                return res.send(match);
+                const matchedObj = {
+                    short_url: `https://powerful-caverns-13413.herokuapp.com/${match.short_url}`,
+                    long_url: match.long_url
+                };
+                return res.send(matchedObj);
             }
         }).catch((e) => {
             res.status(400).send(e);
