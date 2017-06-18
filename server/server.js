@@ -4,7 +4,7 @@ const validUrl = require('valid-url');
 
 const {mongoose} = require('./db/mongoose');
 const {Url} = require('./models/url');
-const {strictTest} = require('./utils/utils');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,7 +45,11 @@ app.get('/new/*', (req, res) => {
                     long_url: entry
                 });
                 url.save().then((doc) => {
-                    return res.send(doc);
+                    const urlObj = {
+                        short_url: `https://powerful-caverns-13413.herokuapp.com/${doc.short_url}`,
+                        long_url: doc.long_url
+                    };
+                    return res.send(urlObj);
                 }, (e) => {
                     res.status(400).send(e)
                 });
