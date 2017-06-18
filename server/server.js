@@ -4,7 +4,7 @@ const validUrl = require('valid-url');
 
 const {mongoose} = require('./db/mongoose');
 const {Url} = require('./models/url');
-
+const {strictTest} = require('./utils/utils');
 
 const app = express();
 const port = process.env.PORT || 3000;
