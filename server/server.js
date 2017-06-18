@@ -9,8 +9,6 @@ const {strictTest} = require('./utils/utils');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const global = {count: 0}
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
@@ -39,17 +37,18 @@ app.get('/new/*', (req, res) => {
         Url.findOne({long_url: entry}).then((match) => {
             if(!match){
                 console.log('no match found to valid URL, creating one');
-                global.count++
-                const url = new Url({
-                    short_url: global.count,
-                    long_url: entry
-                });
-                url.save().then((doc) => {
-                    const urlObj = {
-                        short_url: `https://powerful-caverns-13413.herokuapp.com/${doc.short_url}`,
-                        long_url: doc.long_url
-                    };
+                Url.count({}, function(err, count) {
+                    const url = new Url({
+                        short_url: count + 1,
+                        long_url: entry
+                    });
+                    url.save().then((doc) => {
+                        const urlObj = {
+                            short_url: `https://powerful-caverns-13413.herokuapp.com/${doc.short_url}`,
+                            long_url: doc.long_url
+                        };
                     return res.send(urlObj);
+                    });
                 }, (e) => {
                     res.status(400).send(e)
                 });
